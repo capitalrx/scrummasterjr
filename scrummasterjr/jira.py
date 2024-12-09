@@ -72,7 +72,8 @@ class Jira:
             "feature_completed": 0,
             "optimization_completed": 0,
             "not_completed": 0,
-            "removed": 0
+            "removed": 0,
+            "prod_support": 0
         }
 
         items = {
@@ -87,14 +88,16 @@ class Jira:
             "not_completed": 0,
             "removed": 0, 
             "design_committed": 0,
-            "design_completed": 0
+            "design_completed": 0,
+            "prod_support": 0
         }
 
         issue_keys = {
             "committed": [],
             "completed": [],
             "incomplete": [],
-            "removed": []
+            "removed": [],
+            "prod_support": []
         }
 
         feature_work = ["Story", "Design", "Spike"]
@@ -164,6 +167,11 @@ class Jira:
                 if not unplanned:
                     items["design_committed"] += 1
 
+            # Prod Support
+            if "prod_support" in completed["labels"]:
+                points["prod_support"] += issue_points
+                items["prod_support"] += 1
+                issue_keys["prod_support"].append(completed["key"])
 
         # Incomplete Work
         for incomplete in sprint_report["contents"]["issuesNotCompletedInCurrentSprint"]:
@@ -367,7 +375,7 @@ class Jira:
         report['project_key'] = board['location']['projectKey']
         report['average_velocity'] = self.getAverageVelocity(sprint['originBoardId'], sprint_id)
 
-        [report['average_predictability'], report['average_predictability_of_commitments']] = self.getAveragePredictabilities(sprint['originBoardId'], sprint_id)
+        [report['average_predictability'], report['average_predictability_of_commitments'], report['average_prod_support']] = self.getAveragePredictabilities(sprint['originBoardId'], sprint_id)
 
         return report
 
@@ -590,6 +598,10 @@ class Jira:
             notion_dictionary['[items-planned-completed]'] = str(sprint_report_data['issue_metrics']['items']['planned_completed'])
             notion_dictionary['[items-not-completed]'] = str(sprint_report_data['issue_metrics']['items']['not_completed'])
 
+            notion_dictionary['[items-prod-support]'] = str(sprint_report_data['issue_metrics']['items']['prod_support'])
+            notion_dictionary['[points-prod-support]'] = str(sprint_report_data['issue_metrics']['points']['prod_support'])
+            notion_dictionary['[average-prod-support]'] = f"{sprint_report_data['average_prod_support']}%"
+
         except KeyError:
             pass
             #raise ScrumMasterJrError("I wasn't able to update your Notion Doc for some reason. This probably isn't your fault, I've let my overlords know.", "Unable to generate a Notion Replacement Dictionary, keys not found")
@@ -727,6 +739,7 @@ class Jira:
         completed = 0
         committed = 0
         planned_completed = 0
+        prod_support = 0
 
         for sprint in sprints:
             if sprint['id'] == sprint_id:
@@ -738,9 +751,10 @@ class Jira:
                 completed += metrics['points']['completed']
                 committed += metrics['points']['committed']
                 planned_completed += metrics['points']['planned_completed']
-                found_sprints += 1;
+                prod_support += metrics['points']['prod_support']
+                found_sprints += 1
 
         if committed > 0:
-            return (round(completed / committed*100), round(planned_completed / committed*100))
+            return (round(completed / committed*100), round(planned_completed / committed*100), round(prod_support / completed*100))
         else:
             return (0,0)
