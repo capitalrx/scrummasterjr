@@ -619,15 +619,15 @@ class Jira:
             notion_dictionary['[predictability-commitments]'] = str(sprint_report_data['issue_metrics']['meta']['predictability_of_commitments']) + "%"
             notion_dictionary['[average-velocity]'] = str(sprint_report_data['average_velocity'])
 
-            notion_dictionary['[original-committed-link]'] =f"[{sprint_report_data['issue_metrics']['items']['committed']} Committed Issues]({self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['committed'])})"
+            notion_dictionary['[original-committed-link]'] =f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['committed'])}\">{sprint_report_data['issue_metrics']['items']['committed']} Originally Committed Issues</a>"
 
-            notion_dictionary['[completed-issues-link]'] = f"[{sprint_report_data['issue_metrics']['items']['completed']} Completed Issues]({self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['completed'])})"
+            notion_dictionary['[completed-issues-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['completed'])}\">{sprint_report_data['issue_metrics']['items']['completed']} Completed Issues</a>"
 
-            notion_dictionary['[items-not-completed-link]'] = f"[{sprint_report_data['issue_metrics']['items']['not_completed']} Incomplete Issues]({self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['incomplete'])})"
+            notion_dictionary['[items-not-completed-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['incomplete'])}\">{sprint_report_data['issue_metrics']['items']['not_completed']} Incomplete Issues</a>"
 
-            notion_dictionary['[items-removed-link]'] = f"[{sprint_report_data['issue_metrics']['items']['removed']} Removed Issues]({self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['removed'])})"
+            notion_dictionary['[items-removed-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['removed'])}\">{sprint_report_data['issue_metrics']['items']['removed']} Removed Issues</a>"
 
-            notion_dictionary['[items-added-link]'] = f"[{sprint_report_data['issue_metrics']['items']['added']} Added Issues]({self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['added'])})"
+            notion_dictionary['[items-added-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['added'])}\">{sprint_report_data['issue_metrics']['items']['added']} Added Issues</a>"
 
             notion_dictionary['[average-predictability]'] = f"{sprint_report_data['average_predictability']}%"
             notion_dictionary['[average-commitment-predictability]'] = f"{sprint_report_data['average_predictability_of_commitments']}%"

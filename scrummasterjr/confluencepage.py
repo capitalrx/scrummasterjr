@@ -112,6 +112,19 @@ class ConfluencePage:
                         pass    
                     continue
 
+                link_match = re.search('\[.*\-link\]', block.string)
+
+                if link_match:
+                    # This is a link, so replace the whole block
+                    logging.info(f"REPLACING {block.string} -> LINK")
+                    parent = block.parent
+                    logging.info(f"Parent: {parent}")
+                    link = soup.new_tag('p')
+                    link.append(BeautifulSoup(replacement_dictionary[link_match[0]], 'html.parser').contents[0])
+                    logging.info(link)
+                    parent.replace_with(link)
+                    continue
+
                 new_title = block.string
 
                 for search, replace in replacement_dictionary.items():
@@ -120,6 +133,7 @@ class ConfluencePage:
                 if block.string != new_title:
                     logging.info(f"REPLACING {block.string} -> {new_title}")
                     block.string.replace_with(new_title)
+
             except AttributeError:
                 logging.info("Block has no title, moving on")
 
