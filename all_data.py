@@ -20,7 +20,7 @@ if __name__ == '__main__':
         "Godzilla": 189,
         "Jedi": 157,
         "Whiskey": 126,
-        "Paradise": 48,
+        "Paradise": 1345,
         "Snacks": 27,
         "Unicorn": 89,
         "Atlantis": 92,
@@ -33,11 +33,11 @@ if __name__ == '__main__':
         "Data Matrix": 116,
         "Turing": 114,
         "HODL": 46,
-        "Queso": 322,
+        "Queso": 1349,
         "Vigilante": 784,
         "Platform": 388,
         "Rosetta": 586,
-        "T3quila": 620
+        "T3quila": 1347
     }
 
     f = open('all_sprint_data.txt', 'a')
