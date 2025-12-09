@@ -39,6 +39,7 @@ if __name__ == '__main__':
         "Platform": 388,
         "Rosetta": 586,
         "T3quila": 1347
+        "Care Bears": 1675
     }
 
     f = open('all_sprint_data.txt', 'a')
