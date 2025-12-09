@@ -38,7 +38,7 @@ if __name__ == '__main__':
         "Vigilante": 784,
         "Platform": 388,
         "Rosetta": 586,
-        "T3quila": 1347
+        "T3quila": 1347,
         "Care Bears": 1675
     }
 
