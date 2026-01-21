@@ -41,7 +41,11 @@ if __name__ == '__main__':
         "T3quila": 1347,
         "Care Bears": 1675,
         "Maet": 2078,
-        "Byte Club": 1049
+        "Byte Club": 1049,
+        "AI-IDP": 2009,
+        "AI-CC": 2008,
+        "AI3": 2007,
+        "AI-VA": 2010
     }
 
     f = open('all_sprint_data.txt', 'a')
