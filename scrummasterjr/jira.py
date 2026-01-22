@@ -634,7 +634,6 @@ class Jira:
 
             notion_dictionary['[design-committed]'] = str(sprint_report_data['issue_metrics']['items']['design_committed'])
             notion_dictionary['[design-completed]'] = str(sprint_report_data['issue_metrics']['items']['design_completed'])
-            notion_dictionary['[average-design]'] = f"{round(sprint_report_data['average_design']/sprint_report_data['average_velocity']*100)}%"
             notion_dictionary['[average-design-points]'] = str(sprint_report_data['average_design'])
             notion_dictionary['[design-points-committed]'] = str(sprint_report_data['issue_metrics']['points']['design_committed'])
             notion_dictionary['[design-points-completed]'] = str(sprint_report_data['issue_metrics']['points']['design_completed'])
@@ -644,14 +643,23 @@ class Jira:
 
             notion_dictionary['[items-prod-support]'] = str(sprint_report_data['issue_metrics']['items']['prod_support'])
             notion_dictionary['[points-prod-support]'] = str(sprint_report_data['issue_metrics']['points']['prod_support'])
-            notion_dictionary['[average-prod-support]'] = f"{round(sprint_report_data['average_prod_support']/sprint_report_data['average_velocity']*100)}%"
             notion_dictionary['[average-prod-support-points]'] = str(sprint_report_data['average_prod_support'])
 
-            notion_dictionary['[average-unplanned-completed]'] = f"{round(sprint_report_data['average_unplanned_completed']/sprint_report_data['average_velocity']*100)}%"
             notion_dictionary['[average-unplanned-completed-points]'] = str(sprint_report_data['average_unplanned_completed'])
 
             dev_points = sprint_report_data['issue_metrics']['points']['completed'] - sprint_report_data['issue_metrics']['points']['design_completed']
             notion_dictionary['[dev-points]'] = str(dev_points)
+
+            # Rounding up all the division by zero candidates
+
+            if sprint_report_data['average_velocity'] == 0:
+                notion_dictionary['[average-design]'] = "N/A"
+                notion_dictionary['[average-prod-support]'] = "N/A"
+                notion_dictionary['[average-unplanned-completed]'] = "N/A"
+            else:
+                notion_dictionary['[average-design]'] = f"{round(sprint_report_data['average_design']/sprint_report_data['average_velocity']*100)}%"
+                notion_dictionary['[average-prod-support]'] = f"{round(sprint_report_data['average_prod_support']/sprint_report_data['average_velocity']*100)}%"
+                notion_dictionary['[average-unplanned-completed]'] = f"{round(sprint_report_data['average_unplanned_completed']/sprint_report_data['average_velocity']*100)}%"
 
             # These expect to be called with some additional summary context from a Conluence / Notion doc and will bail if we don't have that
             notion_dictionary['[dev-count]'] = str(self.summary['dev_count'])
