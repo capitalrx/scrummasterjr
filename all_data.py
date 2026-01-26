@@ -32,7 +32,6 @@ if __name__ == '__main__':
         "Command Z": 179,
         "Rambo": 182,
         "Data Matrix": 116,
-        "Turing": 114,
         "HODL": 46,
         "Queso": 1349,
         "Vigilante": 784,
@@ -45,6 +44,7 @@ if __name__ == '__main__':
         "AI-IDP": 2009,
         "AI-CC": 2008,
         "AI3": 2007,
+        "AI-PA":2011,
         "AI-VA": 2010
     }
 
