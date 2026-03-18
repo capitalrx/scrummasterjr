@@ -77,7 +77,7 @@ class ConfluencePage:
                         pod_points_planned_completed += int(replacement_dictionary['[points-planned-completed]']) if '[points-planned-completed]' in replacement_dictionary else 0
                         pod_commitment_predictability = f"{round(pod_points_planned_completed / pod_points_committed*100)}%" if pod_points_committed > 0 else "N/A"
 
-                        replacement_dictionary['[pod-points-committed] points committed'] = str(pod_points_committed)
+                        replacement_dictionary['[pod-points-committed]'] = str(pod_points_committed)
                         replacement_dictionary['[pod-points-completed]'] = str(pod_points_completed)
                         replacement_dictionary['[pod-points-planned-completed]'] = str(pod_points_planned_completed)
                         replacement_dictionary['[pod-commitment-predictability]'] = pod_commitment_predictability
