@@ -34,6 +34,11 @@ class ConfluencePage:
         total_items_planned_completed = 0
         total_commitment_predictability = 0
 
+        pod_points_committed = 0
+        pod_points_completed = 0
+        pod_points_planned_completed = 0
+        pod_commitment_predictability = 0
+
         checkSprintGoals = False
         if "[sprint-goal]" in replacement_dictionary:
             checkSprintGoals = True
@@ -67,6 +72,16 @@ class ConfluencePage:
                         replacement_dictionary['[total-items-planned-completed]'] = str(total_items_planned_completed)
                         replacement_dictionary['[total-commitment-predictability]'] = total_commitment_predictability
 
+                        pod_points_committed += int(replacement_dictionary['[points-committed]']) if '[points-committed]' in replacement_dictionary else 0
+                        pod_points_completed += int(replacement_dictionary['[points-completed]']) if '[points-completed]' in replacement_dictionary else 0
+                        pod_points_planned_completed += int(replacement_dictionary['[points-planned-completed]']) if '[points-planned-completed]' in replacement_dictionary else 0
+                        pod_commitment_predictability = f"{round(pod_points_planned_completed / pod_points_committed*100)}%" if pod_points_committed > 0 else "N/A"
+
+                        replacement_dictionary['[pod-points-committed]'] = str(pod_points_committed)
+                        replacement_dictionary['[pod-points-completed]'] = str(pod_points_completed)
+                        replacement_dictionary['[pod-points-planned-completed]'] = str(pod_points_planned_completed)
+                        replacement_dictionary['[pod-commitment-predictability]'] = pod_commitment_predictability
+
                         block.replace_with()
                         if "[next-sprint-goal]" in replacement_dictionary:
                             checkNextSprintGoals = True
@@ -76,6 +91,13 @@ class ConfluencePage:
                         logging.info(f"Replacement Dictionary\n{replacement_dictionary}")
                         continue
 
+                if "[pod]" in block.string:
+                    pod_points_committed = 0
+                    pod_points_completed = 0
+                    pod_points_planned_completed = 0
+                    pod_commitment_predictability = 0
+                    block.replace_with()
+                    continue
 
                 if checkSprintGoals and "[sprint-goal]" in block.string:
                     parent = block.parent

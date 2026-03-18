@@ -609,6 +609,7 @@ class Jira:
             notion_dictionary['[sprint-goal]'] = "\n".join(sprint_report_data['sprint_goals'])
             notion_dictionary['[points-committed]'] = str(sprint_report_data['issue_metrics']['points']['committed'])
             notion_dictionary['[points-completed]'] = str(sprint_report_data['issue_metrics']['points']['completed'])
+            notion_dictionary['[points-planned-completed]'] = str(sprint_report_data['issue_metrics']['points']['planned_completed'])
 
             notion_dictionary['[items-committed]'] = str(sprint_report_data['issue_metrics']['items']['committed'])
             notion_dictionary['[items-completed]'] = str(sprint_report_data['issue_metrics']['items']['completed'])
