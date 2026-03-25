@@ -45,7 +45,8 @@ if __name__ == '__main__':
         "AI-CC": 2008,
         "AI3": 2007,
         "AI-PA":2011,
-        "AI-VA": 2010
+        "AI-VA": 2010,
+        "ImPOSters": 1279
     }
 
     f = open('all_sprint_data.txt', 'a')
