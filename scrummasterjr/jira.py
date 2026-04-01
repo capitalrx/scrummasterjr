@@ -154,10 +154,8 @@ class Jira:
                 issue_keys["committed"].append(completed["key"])
                 points["committed"] += issue_points_original
                 items["committed"] += 1
-                points["planned_completed"] += issue_points
+                points["planned_completed"] += issue_points_original
                 items["planned_completed"] += 1
-                if issue_points_original < issue_points:
-                    points["planned_completed"] += issue_points-issue_points_original
                 for label in completed["labels"]:
                     points["by_label"]['committed'][label] = points["by_label"]['committed'].get(label, 0) + issue_points
                     
