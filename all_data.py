@@ -43,7 +43,6 @@ if __name__ == '__main__':
         "Byte Club": 1049,
         "AI-IDP": 2009,
         "AI-CC": 2008,
-        "AI3": 2007,
         "AI-PA":2011,
         "AI-VA": 2010,
         "ImPOSters": 1279,
