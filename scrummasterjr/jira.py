@@ -782,7 +782,7 @@ class Jira:
 
     def updateSummary(self, tag):
         logging.info(f"Found Summary Update Tag: {tag}")
-        results = re.search('\[(?P<tag>[\w-]+) (?P<value>[\d\.]+)( (?P<arg>[\w\.]+))?( (?P<arg2>[\d\.]+))?( (?P<arg3>[\d\.]+))?\]', tag)
+        results = re.search('\[(?P<tag>[\w-]+) (?P<value>[\d\.]+)( (?P<arg>[\w\-.]+))?( (?P<arg2>[\d\.]+))?( (?P<arg3>[\d\.]+))?\]', tag)
         if results:
             if results.group('tag') == 'sprint':
                 return self.setSummaryCurrentSprint(results.group('value'))
