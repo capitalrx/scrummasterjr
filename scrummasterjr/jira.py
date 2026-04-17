@@ -673,6 +673,169 @@ class Jira:
 
         return notion_dictionary
 
+    def generatePreviousNotionReplacementDictionary(self, sprint_report_data):
+        """
+        Generates a dictionary who's keys are special tags placed in notion docs like `[previous-sprint-number]` and values are the relevant data.
+
+        This function assumes that the data being passed in is for the 'previous sprint' and acts accordingly
+
+        Args:
+            sprint_report_data: dictionary - AgileOps Sprint Report data
+
+        Returns:
+            dictionary - key / value pairs that will facilitate a search and replace in a notion document to populate it with relevant data
+        """
+        notion_dictionary = {}
+
+        try:
+            start_date = datetime.strptime(sprint_report_data['sprint_start'].split('T')[0], '%d/%b/%y %I:%M %p')
+            end_date = datetime.strptime(sprint_report_data['sprint_end'].split('T')[0], '%d/%b/%y %I:%M %p')
+            notion_dictionary['[previous-sprint-start]'] = datetime.strftime(start_date, '%m/%d/%Y')
+            notion_dictionary['[previous-sprint-end]'] = datetime.strftime(end_date, '%m/%d/%Y')
+
+        except ValueError:
+            pass
+
+        try:
+
+            notion_dictionary['[previous-team-name]'] = sprint_report_data['project_name']
+            notion_dictionary['[previous-sprint-number]'] = sprint_report_data['sprint_number']
+            
+            notion_dictionary['[previous-sprint-goal]'] = "\n".join(sprint_report_data['sprint_goals'])
+            notion_dictionary['[previous-points-committed]'] = str(sprint_report_data['issue_metrics']['points']['committed'])
+            notion_dictionary['[previous-points-completed]'] = str(sprint_report_data['issue_metrics']['points']['completed'])
+            notion_dictionary['[previous-points-planned-completed]'] = str(sprint_report_data['issue_metrics']['points']['planned_completed'])
+
+            notion_dictionary['[previous-items-committed]'] = str(sprint_report_data['issue_metrics']['items']['committed'])
+            notion_dictionary['[previous-items-completed]'] = str(sprint_report_data['issue_metrics']['items']['completed'])
+            notion_dictionary['[previous-items-added]'] = str(sprint_report_data['issue_metrics']['items']['added'])
+            notion_dictionary['[previous-bugs-completed]'] = str(sprint_report_data['issue_metrics']['items']['bugs_completed'])
+
+            notion_dictionary['[previous-predictability]'] = str(sprint_report_data['issue_metrics']['meta']['predictability']) + "%"
+            notion_dictionary['[previous-predictability-commitments]'] = str(sprint_report_data['issue_metrics']['meta']['predictability_of_commitments']) + "%"
+            notion_dictionary['[previous-average-velocity]'] = str(sprint_report_data['average_velocity'])
+
+            notion_dictionary['[previous-original-committed-link]'] =f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['committed'])}\">{sprint_report_data['issue_metrics']['items']['committed']} Originally Committed Issues</a>"
+
+            notion_dictionary['[previous-completed-issues-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['completed'])}\">{sprint_report_data['issue_metrics']['items']['completed']} Completed Issues</a>"
+
+            notion_dictionary['[previous-items-not-completed-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['incomplete'])}\">{sprint_report_data['issue_metrics']['items']['not_completed']} Incomplete Issues</a>"
+
+            notion_dictionary['[previous-items-removed-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['removed'])}\">{sprint_report_data['issue_metrics']['items']['removed']} Removed Issues</a>"
+
+            notion_dictionary['[previous-items-added-link]'] = f"<a href=\"{self.generateJiraIssueLink(sprint_report_data['issue_metrics']['issue_keys']['added'])}\">{sprint_report_data['issue_metrics']['items']['added']} Added Issues</a>"
+
+            notion_dictionary['[previous-average-predictability]'] = f"{sprint_report_data['average_predictability']}%"
+            notion_dictionary['[previous-average-commitment-predictability]'] = f"{sprint_report_data['average_predictability_of_commitments']}%"
+
+            notion_dictionary['[previous-design-committed]'] = str(sprint_report_data['issue_metrics']['items']['design_committed'])
+            notion_dictionary['[previous-design-completed]'] = str(sprint_report_data['issue_metrics']['items']['design_completed'])
+            notion_dictionary['[previous-average-design-points]'] = str(sprint_report_data['average_design'])
+            notion_dictionary['[previous-design-points-committed]'] = str(sprint_report_data['issue_metrics']['points']['design_committed'])
+            notion_dictionary['[previous-design-points-completed]'] = str(sprint_report_data['issue_metrics']['points']['design_completed'])
+
+            notion_dictionary['[previous-items-planned-completed]'] = str(sprint_report_data['issue_metrics']['items']['planned_completed'])
+            notion_dictionary['[previous-items-not-completed]'] = str(sprint_report_data['issue_metrics']['items']['not_completed'])
+
+            notion_dictionary['[previous-items-prod-support]'] = str(sprint_report_data['issue_metrics']['items']['prod_support'])
+            notion_dictionary['[previous-points-prod-support]'] = str(sprint_report_data['issue_metrics']['points']['prod_support'])
+            notion_dictionary['[previous-average-prod-support-points]'] = str(sprint_report_data['average_prod_support'])
+
+            notion_dictionary['[previous-average-unplanned-completed-points]'] = str(sprint_report_data['average_unplanned_completed'])
+
+            dev_points = sprint_report_data['issue_metrics']['points']['completed'] - sprint_report_data['issue_metrics']['points']['design_completed']
+            notion_dictionary['[previous-dev-points]'] = str(dev_points)
+
+            # Rounding up all the division by zero candidates
+
+            if sprint_report_data['average_velocity'] == 0:
+                notion_dictionary['[previous-average-design]'] = "N/A"
+                notion_dictionary['[previous-average-prod-support]'] = "N/A"
+                notion_dictionary['[previous-average-unplanned-completed]'] = "N/A"
+            else:
+                notion_dictionary['[previous-average-design]'] = f"{round(sprint_report_data['average_design']/sprint_report_data['average_velocity']*100)}%"
+                notion_dictionary['[previous-average-prod-support]'] = f"{round(sprint_report_data['average_prod_support']/sprint_report_data['average_velocity']*100)}%"
+                notion_dictionary['[previous-average-unplanned-completed]'] = f"{round(sprint_report_data['average_unplanned_completed']/sprint_report_data['average_velocity']*100)}%"
+
+            # These expect to be called with some additional summary context from a Conluence / Notion doc and will bail if we don't have that
+            notion_dictionary['[previous-dev-count]'] = str(self.summary['dev_count'])
+            notion_dictionary['[previous-designer-count]'] = str(self.summary['designer_count'])
+
+            notion_dictionary['[previous-points-per-dev]'] = str(round(dev_points / self.summary['dev_count'])) if self.summary['dev_count'] else "N/A"
+            notion_dictionary['[previous-points-per-designer]'] = str(round(sprint_report_data['issue_metrics']['points']['design_completed'] / self.summary['designer_count'])) if self.summary['designer_count'] else "N/A"
+
+        except KeyError:
+            pass
+            #raise ScrumMasterJrError("I wasn't able to update your Notion Doc for some reason. This probably isn't your fault, I've let my overlords know.", "Unable to generate a Notion Replacement Dictionary, keys not found")
+
+        return notion_dictionary
+
+    def generateDeltaNotionReplacementDictionary(self, current_sprint_data, previous_sprint_data):
+        """
+        Generates a dictionary with keys representing the percentage delta between current and previous sprint metrics.
+
+        Calculates the percentage change as: ((current - previous) / previous) * 100
+
+        Args:
+            current_sprint_data: dictionary - AgileOps Sprint Report data for current sprint
+            previous_sprint_data: dictionary - AgileOps Sprint Report data for previous sprint
+
+        Returns:
+            dictionary - key / value pairs with delta values formatted as strings (e.g., "+25%", "-10%")
+        """
+        delta_dictionary = {}
+
+        # Fields to compare: (nested path to field, key name for output)
+        fields_to_compare = [
+            (['issue_metrics', 'points', 'committed'], 'delta-points-committed'),
+            (['issue_metrics', 'points', 'completed'], 'delta-points-completed'),
+            (['issue_metrics', 'points', 'planned_completed'], 'delta-points-planned-completed'),
+            (['issue_metrics', 'items', 'committed'], 'delta-items-committed'),
+            (['issue_metrics', 'items', 'completed'], 'delta-items-completed'),
+            (['issue_metrics', 'items', 'added'], 'delta-items-added'),
+            (['issue_metrics', 'items', 'bugs_completed'], 'delta-bugs-completed'),
+            (['issue_metrics', 'meta', 'predictability'], 'delta-predictability'),
+            (['issue_metrics', 'meta', 'predictability_of_commitments'], 'delta-predictability-commitments'),
+            (['average_velocity'], 'delta-average-velocity'),
+            (['average_design'], 'delta-average-design'),
+            (['average_prod_support'], 'delta-average-prod-support'),
+            (['average_unplanned_completed'], 'delta-average-unplanned-completed'),
+            (['issue_metrics', 'items', 'design_committed'], 'delta-design-committed'),
+            (['issue_metrics', 'items', 'design_completed'], 'delta-design-completed'),
+            (['issue_metrics', 'points', 'design_committed'], 'delta-design-points-committed'),
+            (['issue_metrics', 'points', 'design_completed'], 'delta-design-points-completed'),
+            (['issue_metrics', 'items', 'planned_completed'], 'delta-items-planned-completed'),
+            (['issue_metrics', 'items', 'not_completed'], 'delta-items-not-completed'),
+            (['issue_metrics', 'items', 'prod_support'], 'delta-items-prod-support'),
+            (['issue_metrics', 'points', 'prod_support'], 'delta-points-prod-support'),
+            (['average_predictability'], 'delta-average-predictability'),
+            (['average_predictability_of_commitments'], 'delta-average-commitment-predictability'),
+        ]
+
+        for path, key_name in fields_to_compare:
+            try:
+                current_value = current_sprint_data
+                previous_value = previous_sprint_data
+
+                # Navigate through nested dictionaries
+                for field in path:
+                    current_value = current_value[field]
+                    previous_value = previous_value[field]
+
+                # Calculate percentage delta
+                if not previous_value:
+                    delta_dictionary[f'[{key_name}]'] = "N/A"
+                else:
+                    delta = ((current_value - previous_value) / previous_value) * 100
+                    sign = "+" if delta > 0 else ""
+                    delta_dictionary[f'[{key_name}]'] = f"{sign}{round(delta)}%"
+
+            except (KeyError, TypeError):
+                # Skip fields that don't exist in data
+                delta_dictionary[f'[{key_name}]'] = "N/A"
+
+        return delta_dictionary
+
     def generateJiraIssueLink(self, issues):
         """Generates a link to a collection of Jira issues
 
@@ -743,14 +906,33 @@ class Jira:
             logging.info(f"We have a board: {self.summary['board_id']}")
 
             if 'current_sprint' in self.summary.keys():
-                sprint = self.getMatchingSprintInBoard(self.summary['board_id'], f"{self.summary['current_sprint']}{self.summary['specific_sprint_name_match']}")
-                if sprint:
-                    logging.info(f"We have a sprint: {sprint}")
-                    data = self.generateAllSprintReportData(sprint['id'])
-                    dictionary = self.generateNotionReplacementDictionary(data)
+                if self.summary['current_sprint']:
+                    (year, sprintID) = self.summary['current_sprint'].split(".")
+                    if int(sprintID) == '01':
+                        sprintID = "27"
+                        year = str(int(year) - 1)
+                    else:
+                        sprintID = str(int(sprintID) - 1).zfill(2)
+
+                current_sprint = self.getMatchingSprintInBoard(self.summary['board_id'], f"{self.summary['current_sprint']}{self.summary['specific_sprint_name_match']}")
+                if current_sprint:
+                    logging.info(f"We have a sprint: {current_sprint}")
+                    current_data = self.generateAllSprintReportData(current_sprint['id'])
+                    dictionary = self.generateNotionReplacementDictionary(current_data)
                     notion_dictionary.update(dictionary)
                 else:
                     logging.info("Couldn't find sprint, moving on")
+
+                if 'previous_sprint' in self.summary.keys():
+                    previous_sprint = self.getMatchingSprintInBoard(self.summary['board_id'], f"{self.summary['previous_sprint']}{self.summary['specific_sprint_name_match']}")
+                    if previous_sprint:
+                        logging.info(f"We have a previous sprint: {previous_sprint}")
+                        previous_data = self.generateAllSprintReportData(previous_sprint['id'])
+                        dictionary = self.generatePreviousNotionReplacementDictionary(previous_data)
+                        notion_dictionary.update(dictionary)
+
+                        dictionary = self.generateDeltaNotionReplacementDictionary(current_data, previous_data)
+                        notion_dictionary.update(dictionary)    
 
             if 'next_sprint' in self.summary.keys():
                 sprint = self.getMatchingSprintInBoard(self.summary['board_id'], f"{self.summary['next_sprint']}{self.summary['specific_sprint_name_match']}")
@@ -770,6 +952,10 @@ class Jira:
     def setSummaryNextSprint(self, next_sprint):
         self.summary['next_sprint'] = next_sprint
         return self.updateSummaryNotionDictionary()
+    
+    def setSummaryPreviousSprint(self, previous_sprint):
+        self.summary['previous_sprint'] = previous_sprint
+        return self.updateSummaryNotionDictionary()
 
     def setSummaryBoardID(self, board_id, specific_sprint_name_match = "", dev_count = 0, designer_count = 0):
         self.summary['board_id'] = board_id
@@ -788,13 +974,15 @@ class Jira:
                 return self.setSummaryNextSprint(results.group('value'))
             if results.group('tag') == 'board':
                 return self.setSummaryBoardID(results.group('value'), results.group('arg'), results.group('arg2'), results.group('arg3'))
+            if results.group('tag') == 'previous-sprint':
+                return self.setSummaryPreviousSprint(results.group('value'))
         return {}
 
     def updateNotionSummaryPage(self, notion_url):
         self.summary = {}
         self.summary['page'] = ConfluencePage(notion_url)
 
-        stopping_block_patterns = ['\[sprint ', '\[next-sprint ', '\[board ']
+        stopping_block_patterns = ['\[sprint ', '\[next-sprint ', '\[board ', '\[previous-sprint ']
 
         self.summary['page'].searchAndReplace({}, stopping_block_patterns, self.updateSummary)
 
