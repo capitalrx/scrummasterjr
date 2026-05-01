@@ -34,6 +34,7 @@ if __name__ == '__main__':
         current_sprint_number = int(match.group(1))+1
         current_sprint_string = f"{now.strftime('%y')}.{current_sprint_number:02}"
         next_sprint = f"{now.strftime('%y')}.{current_sprint_number+1:02}"
+        previous_sprint = f"{now.strftime('%y')}.{current_sprint_number-1:02}"
         
         start_date = (now-datetime.timedelta(days=12)).strftime('%m/%d')
         end_date = (now+datetime.timedelta(days=2)).strftime('%m/%d')
@@ -43,6 +44,7 @@ if __name__ == '__main__':
 
         newbody = re.sub(r'\[sprint {sprint number}\]', f'[sprint {current_sprint_string}]', newbody)
         newbody = re.sub(r'\[next-sprint {sprint number}\]', f'[next-sprint {next_sprint}]', newbody)
+        newbody = re.sub(r'\[previous-sprint {sprint number}\]', f'[previous-sprint {previous_sprint}]', newbody)
 
         dest = confluence.update_or_create(parent_page_id, f"[PENDING METRICS] End of Sprint {current_sprint_number} Report - {start_date} to {end_date}", newbody)
     else: 
