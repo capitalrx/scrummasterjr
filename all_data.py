@@ -38,7 +38,7 @@ if __name__ == '__main__':
         "Platform": 388,
         "Rosetta": 586,
         "T3quila": 1347,
-        "Care Bears": 1675,
+        "Care Bears": 3878,
         "Maet": 2078,
         "Byte Club": 1049,
         "AI-IDP": 2009,
