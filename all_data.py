@@ -29,6 +29,7 @@ if __name__ == '__main__':
         "Zeppelin": 883,
         "Merlin": 165,
         "Keto-memes": 2808,
+        "Kickflip": 2674,
         "Command Z": 179,
         "Rambo": 182,
         "Data Matrix": 116,
