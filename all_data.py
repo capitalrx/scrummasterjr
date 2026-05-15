@@ -30,7 +30,7 @@ if __name__ == '__main__':
         "Merlin": 165,
         "Keto-memes": 2808,
         "Command Z": 179,
-        "Rambo": 182,
+        "Rambo": 3879,
         "Data Matrix": 116,
         "HODL": 46,
         "Queso": 1349,
