@@ -465,7 +465,7 @@ class Jira:
 
         sprint_id = f"{sprint_id}"
 
-        for sprint in sorted(velocity_report['velocityStatEntries'], reverse=True):
+        for sprint in sorted(velocity_report['velocityStatEntries'], reverse=True, key=int):
             if sprints >= 3:
                 # We only care about the last three sprints
                 break;
