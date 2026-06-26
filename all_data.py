@@ -35,7 +35,6 @@ if __name__ == '__main__':
         "HODL": 46,
         "Queso": 1349,
         "Vigilante": 784,
-        "Platform": 388,
         "Rosetta": 4028,
         "T3quila": 1347,
         "Care Bears": 3878,
