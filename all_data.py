@@ -46,7 +46,10 @@ if __name__ == '__main__':
         "AI-VA": 2010,
         "ImPOSters": 1279,
         "Scale": 1708,
-        "EDM": 3985
+        "EDM": 3985,
+        "COBRA": 3945,
+        "Team-PI": 4030,
+        "Care of Duty": 4034
     }
 
     f = open('all_sprint_data.txt', 'a')
