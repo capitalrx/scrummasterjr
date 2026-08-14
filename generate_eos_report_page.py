@@ -27,9 +27,10 @@ if __name__ == '__main__':
         previous_end = datetime.datetime.strptime(f"{match.group(3)}/{now.strftime('%y')}", "%m/%d/%y")
 
         # Assume that this is going to run on the Monday before the sprint ending on Wednesday
-        if previous_end > now-datetime.timedelta(days=7):
-            print(f"Previous EOS ended on {match.group(3)} and we need to wait until next week to cut a new one")
-            exit(1)
+        # UPDATE: We want this run on the first Monday of the sprint
+        # if previous_end > now-datetime.timedelta(days=7):
+        #     print(f"Previous EOS ended on {match.group(3)} and we need to wait until next week to cut a new one")
+        #     exit(1)
 
         current_sprint_number = int(match.group(1))+1
         current_sprint_string = f"{now.strftime('%y')}.{current_sprint_number:02}"
