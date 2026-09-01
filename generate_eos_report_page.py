@@ -37,8 +37,8 @@ if __name__ == '__main__':
         next_sprint = f"{now.strftime('%y')}.{current_sprint_number+1:02}"
         previous_sprint = f"{now.strftime('%y')}.{current_sprint_number-1:02}"
         
-        start_date = (now-datetime.timedelta(days=12)).strftime('%m/%d')
-        end_date = (now+datetime.timedelta(days=2)).strftime('%m/%d')
+        start_date = (now-datetime.timedelta(days=2)).strftime('%m/%d')
+        end_date = (now+datetime.timedelta(days=17)).strftime('%m/%d')
 
         source = confluence.get_page_by_id(template_page_id, expand='body.storage')
         newbody = source['body']['storage']['value']
