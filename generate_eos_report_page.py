@@ -21,7 +21,7 @@ if __name__ == '__main__':
     children = confluence.get_child_pages(parent_page_id)
     *_, last_child = children
 
-    match = re.search(r'(\d+) Report - (\d+\/\d+) to (\d+\/\d+)', last_child['title'])
+    match = re.search(r'^(\d+) Report - (\d+\/\d+) to (\d+\/\d+)', last_child['title'])
     if match: 
         now = datetime.datetime.now()
         previous_end = datetime.datetime.strptime(f"{match.group(3)}/{now.strftime('%y')}", "%m/%d/%y")
@@ -37,8 +37,8 @@ if __name__ == '__main__':
         next_sprint = f"{now.strftime('%y')}.{current_sprint_number+1:02}"
         previous_sprint = f"{now.strftime('%y')}.{current_sprint_number-1:02}"
         
-        start_date = (now-datetime.timedelta(days=2)).strftime('%m/%d')
-        end_date = (now+datetime.timedelta(days=17)).strftime('%m/%d')
+        start_date = previous_end.strftime('%m/%d')
+        end_date = (previous_end+datetime.timedelta(days=14)).strftime('%m/%d')
 
         source = confluence.get_page_by_id(template_page_id, expand='body.storage')
         newbody = source['body']['storage']['value']
