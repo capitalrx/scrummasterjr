@@ -50,7 +50,8 @@ if __name__ == '__main__':
         "COBRA": 3945,
         "Team-PI": 4030,
         "Care of Duty": 4034,
-        "Tapas": 4040
+        "Tapas": 4040,
+        "Data Fusion": 3984
     }
 
     f = open('all_sprint_data.txt', 'a')
