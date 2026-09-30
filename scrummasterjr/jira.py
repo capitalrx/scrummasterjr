@@ -19,23 +19,42 @@ class Jira:
     __regex = {}
     __descriptions = {}
 
-    def __makeRequest(self, verb, url, params=None):
+    def __makeRequest(self, verb, url, params=None, data=None, headers=None):
         """Wrapper for a simple HTTP request
 
             Args:
                 verb: string - HTTP verb as string (ie. 'GET' or 'POST')
                 url: string - URL to make HTTP requests against
                 params: dictionary - Any request parameters to pass along (defaults to None)
+                data: object - request body payload to send (defaults to None)
+                headers: dictionary - additional request headers to merge (defaults to None)
 
             Returns:
                 dictionary - A JSON represenatation of the response text, or False in the case of an error
         """
-        response = requests.request(verb, url, headers={ 'Accept': 'application/json' }, auth=self.__auth, params=params)
-        if response.status_code == 200:
-            return(json.loads(response.text))
+        request_headers = {'Accept': 'application/json'}
+        if data is not None:
+            request_headers['Content-Type'] = 'application/json'
+            if isinstance(data, (dict, list)):
+                data = json.dumps(data)
+        if headers:
+            request_headers.update(headers)
+
+        response = requests.request(
+            verb,
+            url,
+            headers=request_headers,
+            auth=self.__auth,
+            params=params,
+            data=data,
+        )
+        if response.status_code in (200, 201, 204):
+            if not response.text:
+                return True
+            return json.loads(response.text)
         else:
             logging.error(response.text)
-            return(False)
+            return False
 
     def __init__(self, host, user, token, prefix=False):
         self.__host = host
@@ -54,6 +73,29 @@ class Jira:
         response = self.__makeRequest('GET', url)
 
         return response
+
+    def getEntityProperties(self, project_key):
+        url = f"{self.__url}project/{project_key}/properties"
+
+        response = self.__makeRequest('GET', url)
+
+        return response
+
+    def getEntityProperty(self, project_key, property_name):
+        url = f"{self.__url}project/{project_key}/properties/{property_name}"
+
+        response = self.__makeRequest('GET', url)
+
+        return response
+
+    def setEntityProperty(self, project_key, property_name, property_value):
+        url = f"{self.__url}project/{project_key}/properties/{property_name}"
+
+        data = json.dumps(property_value)
+
+        logging.debug(f"Setting Jira entity property {property_name}: {data}")
+
+        return self.__makeRequest('PUT', url, data=data)
 
     def calculateSprintMetrics(self, sprint_report):
         """Given the data from a Jira sprint report, calculates sprint metrics
