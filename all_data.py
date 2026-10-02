@@ -38,7 +38,7 @@ if __name__ == '__main__':
         "Rosetta": 4028,
         "PATrons": 1347,
         "Care Bears": 3878,
-        "Maet": 2078,
+        "Rx-Men": 2078,
         "Byte Club": 4035,
         "AI-IDP": 2009,
         "AI-CC": 2008,

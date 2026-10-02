@@ -21,7 +21,7 @@ if __name__ == '__main__':
     children = confluence.get_child_pages(parent_page_id)
     *_, last_child = children
 
-    match = re.search(r'(\d+) Report - (\d+\/\d+) to (\d+\/\d+)', last_child['title'])
+    match = re.search(r'^(\d+) Report - (\d+\/\d+) to (\d+\/\d+)', last_child['title'])
     if match: 
         now = datetime.datetime.now()
         previous_end = datetime.datetime.strptime(f"{match.group(3)}/{now.strftime('%y')}", "%m/%d/%y")
