@@ -3,11 +3,11 @@ name: Run End of Sprint Metrics
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 20 * * 4"
+    - cron: "0 21 * * 4"
   
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
       - name: Install Python, pipenv and Pipfile packages
