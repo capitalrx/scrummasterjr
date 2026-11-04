@@ -3,11 +3,11 @@ name: Generate End of Sprint Report
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 13 * * 1"
+    - cron: "0 14 * * 1"
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
       - name: Install Python, pipenv and Pipfile packages
